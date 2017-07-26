@@ -13,8 +13,6 @@ import java.io.IOException;
  */
 
 public class QiHuoMarket extends MarketBase {
-    String api_key = "27ce2f93-2a8e-4538-9182-b11ead59a588"; // OKCoin申请的apiKey
-    String secret_key = "1404EF390CF692E216178B31A5D746BB"; // OKCoin
     // 申请的secret_key
     String url_prex = "https://www.okcoin.com"; // 注意：请求URL
     // 国际站https://www.okcoin.com
@@ -38,7 +36,7 @@ public class QiHuoMarket extends MarketBase {
     public QiHuoMarket() {
         super();
         stockGet = new FutureRestApiV1(url_prex);
-        stockPost = new FutureRestApiV1(url_prex, api_key, secret_key);
+        stockPost = new FutureRestApiV1(url_prex, FConfig.api_key, FConfig.secret_key);
     }
 
     @Override
