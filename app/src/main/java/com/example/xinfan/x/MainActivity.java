@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.okcoin.rest.entity.TrickerEntity;
 import com.okcoin.rest.entity.event.LogEvent;
 import com.okcoin.rest.manager.FConfig;
+import com.okcoin.rest.manager.MarketBase;
 import com.okcoin.rest.manager.TrickerManger;
 import com.okcoin.rest.manager.XianHuoMarket;
 
@@ -28,6 +29,10 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+
+import static com.okcoin.rest.manager.FConfig.MAKERTYPE_BTC;
+import static com.okcoin.rest.manager.FConfig.MAKERTYPE_LTC;
 
 /**
  * Created by xinfan on 2017/7/20.
@@ -47,8 +52,11 @@ public class MainActivity extends Activity {
     RadioButton rbBtc;
     @BindView(R.id.main_begin)
     Button btnBegin;
+    @BindView(R.id.main_jiange)
+    EditText etJiange;
     private boolean doXunhuan = false;
-    TrickerManger trickerManger = new TrickerManger(new XianHuoMarket());
+    private MarketBase marketBase;
+    private TrickerManger trickerManger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,24 +64,33 @@ public class MainActivity extends Activity {
         EventBus.getDefault().register(this);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        marketBase = new XianHuoMarket();
+        trickerManger = new TrickerManger(marketBase);
 
-        etXishu.setText("" + FConfig.prefectxishu);
-        etJunxianCount.setText("" + FConfig.junxianCount);
+        etXishu.setText("" + FConfig.getInstance().getPrefectxishu());
+        etJunxianCount.setText("" + FConfig.getInstance().getJunxianCount());
+        btcChecked();
+    }
+
+    @OnCheckedChanged(R.id.main_money_type_btc)
+    public void btcChecked() {
+        if (rbBtc.isChecked()) {
+            FConfig.getInstance().setMakerType(MAKERTYPE_BTC);
+        } else {
+            FConfig.getInstance().setMakerType(MAKERTYPE_LTC);
+        }
+        FConfig.getInstance().setOrder_offset(marketBase.getOffsetValue());
+        etJiange.setText("" + marketBase.getOffsetValue());
     }
 
     public class OrderThread extends Thread {
         @Override
         public void run() {
             double prefectxishu = Double.valueOf(etXishu.getText().toString());
-            if (rbBtc.isChecked()) {
-                FConfig.makerType = "btc_usd";
-            } else {
-                FConfig.makerType = "ltc_usd";
-            }
             while (doXunhuan) {
                 String[] values = new String[3];
                 try {
-                    values = trickerManger.calJunxian(FConfig.makerType, Integer.valueOf(etJunxianCount.getText().toString()), prefectxishu);
+                    values = trickerManger.calJunxian(FConfig.getInstance().getMakerType(), Integer.valueOf(etJunxianCount.getText().toString()), prefectxishu);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (HttpException e) {
@@ -93,9 +110,9 @@ public class MainActivity extends Activity {
                 if (cbQidong.isChecked()) {
                     // --------------------------------开始查询老订单-----------------------------------
                     try {
-                        trickerManger.selectDoOder(FConfig.makerType);
-                        trickerManger.selectYingliOrder(FConfig.makerType);
-                        trickerManger.doOrder(FConfig.total, FConfig.number, FConfig.makerType, orderType, orderValue, prefectValue);
+                        trickerManger.selectDoOder(FConfig.getInstance().getMakerType());
+                        trickerManger.selectYingliOrder(FConfig.getInstance().getMakerType());
+                        trickerManger.doOrder(FConfig.getInstance().getTotal(), FConfig.getInstance().getNumber(), FConfig.getInstance().getMakerType(), orderType, orderValue, prefectValue);
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (HttpException e) {
@@ -110,7 +127,7 @@ public class MainActivity extends Activity {
                 try {
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     TrickerManger.showLog(format.format(new Date(System.currentTimeMillis())) + "-----------");
-                    Thread.sleep(FConfig.time);
+                    Thread.sleep(FConfig.getInstance().getTime());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -25,7 +25,7 @@ public class StockClient {
     public static void main(String[] args) throws HttpException, IOException {
         TrickerManger trickerManger = new TrickerManger(new XianHuoMarket());
         while (true) {
-            String[] values = trickerManger.calJunxian(FConfig.makerType, FConfig.junxianCount, FConfig.prefectxishu);
+            String[] values = trickerManger.calJunxian(FConfig.getInstance().getMakerType(), FConfig.getInstance().getJunxianCount(), FConfig.getInstance().getPrefectxishu());
             TrickerEntity lastEntity = trickerManger.getLastEntity();
             TrickerEntity lastJunxianEntity = trickerManger.getLastJunxianEntity();
             double orderValue = Double.valueOf(values[0]);
@@ -33,23 +33,23 @@ public class StockClient {
             double prefectValue = Double.valueOf(values[1]);
             prefectValue = Double.valueOf(String.format("%.3f", prefectValue));
             String orderType = values[2];
-            TrickerManger.showLog(FConfig.junxianCount + "均线" + "\n当前均线" + lastJunxianEntity.getJunxian() + " \n当前均线差价=" + (lastJunxianEntity.getJunxian() - lastEntity.getLast()) + " \n最新成交价=" + lastEntity.getLast() + "  \n推荐价格="
+            TrickerManger.showLog(FConfig.getInstance().getJunxianCount() + "均线" + "\n当前均线" + lastJunxianEntity.getJunxian() + " \n当前均线差价=" + (lastJunxianEntity.getJunxian() - lastEntity.getLast()) + " \n最新成交价=" + lastEntity.getLast() + "  \n推荐价格="
                     + orderValue + " \n盈利点1=" + (orderValue + prefectValue / 2) + " \n盈利点2="
-                    + (orderValue - prefectValue / 2) + " \n系数=" + FConfig.prefectxishu + (orderType.equals("buy") ? " \n做多" : " \n做空"));
-            if (FConfig.jiaoyi) {
+                    + (orderValue - prefectValue / 2) + " \n系数=" + FConfig.getInstance().getPrefectxishu() + (orderType.equals("buy") ? " \n做多" : " \n做空"));
+            if (FConfig.getInstance().isJiaoyi()) {
                 // --------------------------------开始查询老订单-----------------------------------
-                trickerManger.selectDoOder(FConfig.makerType);
-                trickerManger.selectYingliOrder(FConfig.makerType);
-                trickerManger.doOrder(FConfig.total, FConfig.number, FConfig.makerType, orderType, orderValue, prefectValue);
+                trickerManger.selectDoOder(FConfig.getInstance().getMakerType());
+                trickerManger.selectYingliOrder(FConfig.getInstance().getMakerType());
+                trickerManger.doOrder(FConfig.getInstance().getTotal(), FConfig.getInstance().getNumber(), FConfig.getInstance().getMakerType(), orderType, orderValue, prefectValue);
 
             }
-            if (!FConfig.jiaoyi)
+            if (!FConfig.getInstance().isJiaoyi())
                 break;
             try {
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 TrickerManger.showLog(format.format(new Date(System.currentTimeMillis())) + "-----------");
 
-                Thread.sleep(FConfig.time);
+                Thread.sleep(FConfig.getInstance().getTime());
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

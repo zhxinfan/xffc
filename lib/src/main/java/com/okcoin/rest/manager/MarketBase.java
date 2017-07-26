@@ -22,4 +22,6 @@ public abstract class MarketBase {
 
     public abstract String cancel_order(String symbol, String order_id) throws HttpException, IOException;
 
+    public abstract float getOffsetValue();
+
 }

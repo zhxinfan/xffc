@@ -235,9 +235,9 @@ public class TrickerManger {
             // 现货下单交易
             for (int i = 0; i < count; i++) {
                 if (orderType.equals("buy")) {
-                    orderValue -= FConfig.order_offset;
+                    orderValue -= FConfig.getInstance().getOrder_offset();
                 } else {
-                    orderValue += FConfig.order_offset;
+                    orderValue += FConfig.getInstance().getOrder_offset();
                 }
                 String tradeResult = marketBase.trade(makerType, orderType, "" + orderValue, "" + number);
                 if (tradeResult == null) {
@@ -263,7 +263,7 @@ public class TrickerManger {
 
 
     public static void showLog(String log) {
-        if (FConfig.isAndroid) {
+        if (FConfig.getInstance().isAndroid()) {
             EventBus.getDefault().post(new LogEvent(log));
         } else {
             System.out.println(log);

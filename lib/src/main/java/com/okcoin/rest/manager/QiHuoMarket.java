@@ -63,4 +63,12 @@ public class QiHuoMarket extends MarketBase {
     public String cancel_order(String symbol, String order_id) throws HttpException, IOException {
         return stockPost.future_cancel(symbol, type, order_id);
     }
+
+    @Override
+    public float getOffsetValue() {
+        if (FConfig.MAKERTYPE_BTC.equals(FConfig.getInstance().getMakerType())) {
+            return FConfig.OFFSET_BTC;
+        }
+        return FConfig.OFFSET_LTC;
+    }
 }
