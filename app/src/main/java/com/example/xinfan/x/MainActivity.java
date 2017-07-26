@@ -45,6 +45,8 @@ public class MainActivity extends Activity {
     CheckBox cbQidong;
     @BindView(R.id.main_money_type_btc)
     RadioButton rbBtc;
+    @BindView(R.id.main_begin)
+    Button btnBegin;
     private boolean doXunhuan = false;
     TrickerManger trickerManger = new TrickerManger(new XianHuoMarket());
 
@@ -101,8 +103,10 @@ public class MainActivity extends Activity {
                     }
 
                 }
-                if (!cbQidong.isChecked())
+                if (!cbQidong.isChecked()) {
+                    MainActivity.this.stop();
                     break;
+                }
                 try {
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     TrickerManger.showLog(format.format(new Date(System.currentTimeMillis())) + "-----------");
@@ -112,6 +116,19 @@ public class MainActivity extends Activity {
                 }
             }
         }
+    }
+
+    private void stop() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                doXunhuan = false;
+                orderThread.interrupt();
+                orderThread = null;
+                btnBegin.setText("开始");
+            }
+        });
+
     }
 
     public void btnClick(View view) {
@@ -124,10 +141,7 @@ public class MainActivity extends Activity {
             }
             btn.setText("结束");
         } else {
-            doXunhuan = false;
-            orderThread.interrupt();
-            orderThread = null;
-            btn.setText("开始");
+            stop();
 
         }
 
