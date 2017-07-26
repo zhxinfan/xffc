@@ -3,11 +3,11 @@ package com.example.xinfan.x;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.okcoin.rest.StockClient;
@@ -26,6 +26,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.okcoin.rest.StockClient.prefectxishu;
 
 /**
@@ -34,32 +37,40 @@ import static com.okcoin.rest.StockClient.prefectxishu;
 
 public class MainActivity extends Activity {
     private OrderThread orderThread;
-    private TextView tvInfo;
-    private EditText etXishu, etJunxianCount;
-    private CheckBox cbQidong;
+    @BindView(R.id.main_info)
+    TextView tvInfo;
+    @BindView(R.id.main_xishu)
+    EditText etXishu;
+    @BindView(R.id.main_junxiancount)
+    EditText etJunxianCount;
+    @BindView(R.id.main_qidong)
+    CheckBox cbQidong;
+    @BindView(R.id.main_money_type_btc)
+    RadioButton rbBtc;
     private boolean doXunhuan = false;
     TrickerManger trickerManger = new TrickerManger(new XianHuoMarket());
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         setContentView(R.layout.activity_main);
-        tvInfo = (TextView) findViewById(R.id.main_info);
-        etXishu = (EditText) findViewById(R.id.main_xishu);
+        ButterKnife.bind(this);
+
         etXishu.setText("" + prefectxishu);
-
-        etJunxianCount = (EditText) findViewById(R.id.main_junxiancount);
         etJunxianCount.setText("" + StockClient.junxianCount);
-
-        cbQidong = (CheckBox) findViewById(R.id.main_qidong);
     }
 
     public class OrderThread extends Thread {
         @Override
         public void run() {
+            prefectxishu = Double.valueOf(etXishu.getText().toString());
+            if (rbBtc.isChecked()) {
+                StockClient.makerType = "btc_usd";
+            } else {
+                StockClient.makerType = "ltc_usd";
+            }
             while (doXunhuan) {
-                prefectxishu = Double.valueOf(etXishu.getText().toString());
                 String[] values = new String[3];
                 try {
                     values = trickerManger.calJunxian(StockClient.makerType, Integer.valueOf(etJunxianCount.getText().toString()), prefectxishu);
@@ -73,8 +84,10 @@ public class MainActivity extends Activity {
                 double orderValue = Double.valueOf(values[0]);
                 double prefectValue = Double.valueOf(values[1]);
                 String orderType = values[2];
-                TrickerManger.showLog(etJunxianCount.getText().toString() + "均线" + "\n当前均线" + lastJunxianEntity.getJunxian() + " \n当前均线差价=" + (lastJunxianEntity.getJunxian() - lastEntity.getLast()) + " \n最新成交价=" + lastEntity.getLast() + "  \n推荐价格="
-                        + orderValue + " \n盈利点1=" + (orderValue + prefectValue / 2) + " \n盈利点2="
+                TrickerManger.showLog(etJunxianCount.getText().toString() + "均线" + "\n当前均线" + lastJunxianEntity.getJunxian() +
+                        " \n当前均线差价=" + (lastJunxianEntity.getJunxian() - lastEntity.getLast()) +
+                        " \n最新成交价=" + lastEntity.getLast() + "  \n推荐价格=" + orderValue +
+                        " \n盈利点1=" + (orderValue + prefectValue / 2) + " \n盈利点2="
                         + (orderValue - prefectValue / 2) + " \n系数=" + prefectxishu + (orderType.equals("buy") ? " \n做多" : " \n做空"));
 
                 if (cbQidong.isChecked()) {

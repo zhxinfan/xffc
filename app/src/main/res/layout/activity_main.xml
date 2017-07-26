@@ -2,16 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#b0b0b0"
+    android:background="#c0c0c0"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/main_xishu"
-        android:layout_width="60dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:hint="系数"
-        android:inputType="numberDecimal" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/main_xishu"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:hint="系数"
+            android:inputType="numberDecimal" />
+
+        <RadioGroup
+            android:id="@+id/main_money_type"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/main_money_type_btc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="btc" />
+
+            <RadioButton
+                android:id="@+id/main_money_type_ltc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="ltc" />
+
+        </RadioGroup>
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -21,15 +21,15 @@ public class StockClient {
 
     public static String DUO = "buy";
     public static String KONG = "sell";
-    public static String makerType = "btc_usd";
+    public static String makerType = "ltc_usd";
     public static final long time = 60 * 1000 * 3;
     public static boolean jiaoyi = false;
-    public static double prefectxishu = 1.2;
+    public static double prefectxishu = 1;
     public static int number = 25;
     public static int total = 50;// 多空200个;
-    public static int junxianCount = 70;
-    public static boolean isAndroid = false;
-    public static double order_offset = 0.15;
+    public static int junxianCount = 60;
+    public static boolean isAndroid = true;
+    public static double order_offset = 0.5;
 
     public StockClient() {
     }
