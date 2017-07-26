@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.okcoin.rest.StockClient.isAndroid;
-
 /**
  * Created by xinfan on 2017/7/20.
  */
@@ -107,11 +105,11 @@ public class TrickerManger {
         String orderType = null;
 
         if (lastEntity.getLast() > lastJunxianEntity.getJunxian()) {
-            orderType = StockClient.KONG;
+            orderType = FConfig.KONG;
             // 做空
             orderValue = lastJunxianEntity.getJunxian() + prefectValue;
         } else {
-            orderType = StockClient.DUO;
+            orderType = FConfig.DUO;
             // 做多
             orderValue = lastJunxianEntity.getJunxian() - prefectValue;
         }
@@ -237,9 +235,9 @@ public class TrickerManger {
             // 现货下单交易
             for (int i = 0; i < count; i++) {
                 if (orderType.equals("buy")) {
-                    orderValue -= StockClient.order_offset;
+                    orderValue -= FConfig.order_offset;
                 } else {
-                    orderValue += StockClient.order_offset;
+                    orderValue += FConfig.order_offset;
                 }
                 String tradeResult = marketBase.trade(makerType, orderType, "" + orderValue, "" + number);
                 if (tradeResult == null) {
@@ -265,7 +263,7 @@ public class TrickerManger {
 
 
     public static void showLog(String log) {
-        if (isAndroid) {
+        if (FConfig.isAndroid) {
             EventBus.getDefault().post(new LogEvent(log));
         } else {
             System.out.println(log);

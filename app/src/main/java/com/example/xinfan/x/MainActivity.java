@@ -10,9 +10,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.okcoin.rest.StockClient;
 import com.okcoin.rest.entity.TrickerEntity;
 import com.okcoin.rest.entity.event.LogEvent;
+import com.okcoin.rest.manager.FConfig;
 import com.okcoin.rest.manager.TrickerManger;
 import com.okcoin.rest.manager.XianHuoMarket;
 
@@ -28,8 +28,6 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.okcoin.rest.StockClient.prefectxishu;
 
 /**
  * Created by xinfan on 2017/7/20.
@@ -57,23 +55,23 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        etXishu.setText("" + prefectxishu);
-        etJunxianCount.setText("" + StockClient.junxianCount);
+        etXishu.setText("" + FConfig.prefectxishu);
+        etJunxianCount.setText("" + FConfig.junxianCount);
     }
 
     public class OrderThread extends Thread {
         @Override
         public void run() {
-            prefectxishu = Double.valueOf(etXishu.getText().toString());
+            double prefectxishu = Double.valueOf(etXishu.getText().toString());
             if (rbBtc.isChecked()) {
-                StockClient.makerType = "btc_usd";
+                FConfig.makerType = "btc_usd";
             } else {
-                StockClient.makerType = "ltc_usd";
+                FConfig.makerType = "ltc_usd";
             }
             while (doXunhuan) {
                 String[] values = new String[3];
                 try {
-                    values = trickerManger.calJunxian(StockClient.makerType, Integer.valueOf(etJunxianCount.getText().toString()), prefectxishu);
+                    values = trickerManger.calJunxian(FConfig.makerType, Integer.valueOf(etJunxianCount.getText().toString()), prefectxishu);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (HttpException e) {
@@ -93,9 +91,9 @@ public class MainActivity extends Activity {
                 if (cbQidong.isChecked()) {
                     // --------------------------------开始查询老订单-----------------------------------
                     try {
-                        trickerManger.selectDoOder(StockClient.makerType);
-                        trickerManger.selectYingliOrder(StockClient.makerType);
-                        trickerManger.doOrder(StockClient.total, StockClient.number, StockClient.makerType, orderType, orderValue, prefectValue);
+                        trickerManger.selectDoOder(FConfig.makerType);
+                        trickerManger.selectYingliOrder(FConfig.makerType);
+                        trickerManger.doOrder(FConfig.total, FConfig.number, FConfig.makerType, orderType, orderValue, prefectValue);
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (HttpException e) {
@@ -108,7 +106,7 @@ public class MainActivity extends Activity {
                 try {
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     TrickerManger.showLog(format.format(new Date(System.currentTimeMillis())) + "-----------");
-                    Thread.sleep(StockClient.time);
+                    Thread.sleep(FConfig.time);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
