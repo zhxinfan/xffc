@@ -37,23 +37,8 @@ public class TrickerManger {
         this.marketBase = marketBase;
     }
 
-    public String[] calJunxian(String makerType, int junxianCount, double prefectxishu) throws IOException, HttpException {
-
-        lastEntity = new TrickerEntity();
-        // 现货行情
-        // System.out.print(stockGet.ticker("ltc_usd"));
-        {
-            JSONObject tickerBase = new JSONObject(marketBase.ticker(makerType));
-            JSONObject ticker = tickerBase.getJSONObject("ticker");
-            lastEntity.setHigh(ticker.getDouble("high"));
-            lastEntity.setBuy(ticker.getDouble("buy"));
-            lastEntity.setLast(ticker.getDouble("last"));
-            lastEntity.setLow(ticker.getDouble("low"));
-            lastEntity.setSell(ticker.getDouble("sell"));
-            lastEntity.setVol(ticker.getDouble("vol"));
-        }
-
-        String line = marketBase.kline(makerType, "15min", "" + junxianCount * 2, "");
+    public List<TrickerEntity> getTrickerEntityList(String makerType, String lineType, int junxianCount) throws IOException, HttpException {
+        String line = marketBase.kline(makerType, lineType, "" + junxianCount * 2, "");
         // k线
         // System.out.print(line);
         List<TrickerEntity> lists = new ArrayList<>();
@@ -86,6 +71,13 @@ public class TrickerManger {
             }
             lists.add(entity);
         }
+        return lists;
+    }
+
+    public String[] calJunxian(String makerType, int junxianCount, double prefectxishu) throws IOException, HttpException {
+
+        lastEntity = new TrickerEntity();
+        List<TrickerEntity> lists = getTrickerEntityList(makerType, "15min", junxianCount);
         lastJunxianEntity = lists.get(lists.size() - 1);
 
         Collections.sort(lists, new TrickerEntity.ChajiaComparator());
