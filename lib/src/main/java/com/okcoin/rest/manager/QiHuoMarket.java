@@ -16,7 +16,6 @@ public class QiHuoMarket extends MarketBase {
     // 申请的secret_key
     String url_prex = "https://www.okcoin.com"; // 注意：请求URL
     // 国际站https://www.okcoin.com
-    // ;
     // 国内站https://www.okcoin.cn
 
     /**
@@ -36,7 +35,7 @@ public class QiHuoMarket extends MarketBase {
     public QiHuoMarket() {
         super();
         stockGet = new FutureRestApiV1(url_prex);
-        stockPost = new FutureRestApiV1(url_prex, FConfig.api_key, FConfig.secret_key);
+        stockPost = new FutureRestApiV1(url_prex, getAppKey(), getSecretKey());
     }
 
     @Override
@@ -71,4 +70,16 @@ public class QiHuoMarket extends MarketBase {
         }
         return FConfig.OFFSET_LTC;
     }
+
+    @Override
+    public String getAppKey() {
+        return FConfig.QIHUO_APPID;
+    }
+
+    @Override
+    public String getSecretKey() {
+        return FConfig.QIHUO_SECRET;
+    }
+
+
 }

@@ -31,7 +31,7 @@ public class FutureClient {
          * 发送post请求之前，程序会做自动加密，生成签名。
          *
          */
-        IFutureRestApi futurePostV1 = new FutureRestApiV1(url_prex, FConfig.api_key, FConfig.secret_key);
+//        IFutureRestApi futurePostV1 = new FutureRestApiV1(url_prex, FConfig.api_key, FConfig.secret_key);
 
         //期货行情信息
         String s = futureGetV1.future_ticker("btc_usd", "this_week");

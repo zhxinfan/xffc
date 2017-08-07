@@ -24,4 +24,7 @@ public abstract class MarketBase {
 
     public abstract float getOffsetValue();
 
+    public abstract String getAppKey();
+
+    public abstract String getSecretKey();
 }

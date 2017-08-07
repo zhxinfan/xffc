@@ -14,6 +14,7 @@ import com.okcoin.rest.entity.TrickerEntity;
 import com.okcoin.rest.entity.event.LogEvent;
 import com.okcoin.rest.manager.FConfig;
 import com.okcoin.rest.manager.MarketBase;
+import com.okcoin.rest.manager.QiHuoMarket;
 import com.okcoin.rest.manager.TrickerManger;
 import com.okcoin.rest.manager.XianHuoMarket;
 
@@ -64,7 +65,7 @@ public class MainActivity extends Activity {
         EventBus.getDefault().register(this);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        marketBase = new XianHuoMarket();
+        marketBase = new QiHuoMarket();
         trickerManger = new TrickerManger(marketBase);
 
         etXishu.setText("" + FConfig.getInstance().getPrefectxishu());

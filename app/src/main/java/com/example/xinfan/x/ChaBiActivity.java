@@ -95,6 +95,7 @@ public class ChaBiActivity extends Activity {
                         TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) + " " + String.valueOf(ltcList.get(i).getClose() / btcList.get(i).getClose()));
                     }
                 }
+                TrickerManger.showLog("----------");
                 try {
                     Thread.sleep(FConfig.getInstance().getTime());
                 } catch (InterruptedException e) {

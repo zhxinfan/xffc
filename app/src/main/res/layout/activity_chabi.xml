@@ -23,12 +23,23 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-
+                <RadioButton
+                    android:id="@+id/chabi_money_type_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="1min" />
+                <RadioButton
+                    android:id="@+id/chabi_money_type_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="3min" />
                 <RadioButton
                     android:id="@+id/chabi_money_type_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
+                    android:checked="false"
                     android:text="15min" />
 
                 <RadioButton
@@ -45,19 +56,8 @@
                     android:checked="false"
                     android:text="1hour" />
 
-                <RadioButton
-                    android:id="@+id/chabi_money_type_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="2hour" />
 
-                <RadioButton
-                    android:id="@+id/chabi_money_type_5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="4hour" />
+
 
                 <RadioButton
                     android:id="@+id/chabi_money_type_6"

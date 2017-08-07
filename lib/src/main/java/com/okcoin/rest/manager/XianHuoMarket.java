@@ -33,7 +33,7 @@ public class XianHuoMarket extends MarketBase {
     public XianHuoMarket() {
         super();
         stockGet = new StockRestApi(url_prex);
-        stockPost = new StockRestApi(url_prex, FConfig.api_key, FConfig.secret_key);
+        stockPost = new StockRestApi(url_prex, getAppKey(), getSecretKey());
     }
 
     @Override
@@ -67,5 +67,15 @@ public class XianHuoMarket extends MarketBase {
             return FConfig.OFFSET_BTC;
         }
         return FConfig.OFFSET_LTC;
+    }
+
+    @Override
+    public String getAppKey() {
+        return FConfig.XIANHUO_APPID;
+    }
+
+    @Override
+    public String getSecretKey() {
+        return FConfig.XIANHUO_SECRET;
     }
 }
