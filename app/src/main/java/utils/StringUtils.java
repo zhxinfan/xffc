@@ -6,7 +6,7 @@ package utils;
 
 public class StringUtils {
     public static String getBigDecimal(double number) {
-        java.text.DecimalFormat df = new java.text.DecimalFormat("#.#####");
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#.####");
         return df.format(number);
     }
 

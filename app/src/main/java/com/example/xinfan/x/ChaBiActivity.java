@@ -102,7 +102,7 @@ public class ChaBiActivity extends Activity {
                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         String number = StringUtils.getBigDecimal(ltcList.get(i).getClose() / btcList.get(i).getClose());
                         String targetPrice = StringUtils.getBigDecimal(Double.valueOf(number) * newBtcPrice);
-                        TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) + " " + number + " " + targetPrice);
+                        TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) + "-" + number + "-" + StringUtils.getBigDecimal(ltcList.get(i).getClose()) + "-" + targetPrice);
                     }
                 }
                 TrickerManger.showLog("----------" + newLtcPrice);
