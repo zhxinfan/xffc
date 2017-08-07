@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.okcoin.rest.StringUtil;
 import com.okcoin.rest.entity.TrickerEntity;
 import com.okcoin.rest.entity.event.LogEvent;
 import com.okcoin.rest.manager.FConfig;
@@ -33,6 +34,7 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
+import utils.StringUtils;
 
 import static com.okcoin.rest.manager.FConfig.MAKERTYPE_BTC;
 import static com.okcoin.rest.manager.FConfig.MAKERTYPE_LTC;
@@ -81,9 +83,15 @@ public class ChaBiActivity extends Activity {
             while (doXunhuan) {
                 List<TrickerEntity> btcList = null;
                 List<TrickerEntity> ltcList = null;
+                double newBtcPrice = 0;
+                double newLtcPrice = 0;
                 try {
                     btcList = trickerManger.getTrickerEntityList("btc_usd", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
                     ltcList = trickerManger.getTrickerEntityList("ltc_usd", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
+
+                    newBtcPrice = btcList.get(btcList.size() - 1).getClose();
+                    newLtcPrice = ltcList.get(ltcList.size() - 1).getClose();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (HttpException e) {
@@ -92,10 +100,12 @@ public class ChaBiActivity extends Activity {
                 if (btcList != null && ltcList != null && btcList.size() == ltcList.size()) {
                     for (int i = 0; i < btcList.size(); i++) {
                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                        TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) + " " + String.valueOf(ltcList.get(i).getClose() / btcList.get(i).getClose()));
+                        String number = StringUtils.getBigDecimal(ltcList.get(i).getClose() / btcList.get(i).getClose());
+                        String targetPrice = StringUtils.getBigDecimal(Double.valueOf(number) * newBtcPrice);
+                        TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) + " " + number + " " + targetPrice);
                     }
                 }
-                TrickerManger.showLog("----------");
+                TrickerManger.showLog("----------" + newLtcPrice);
                 try {
                     Thread.sleep(FConfig.getInstance().getTime());
                 } catch (InterruptedException e) {
