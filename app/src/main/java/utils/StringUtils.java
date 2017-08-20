@@ -10,4 +10,9 @@ public class StringUtils {
         return df.format(number);
     }
 
+    public static String getBigDecimal0(double number) {
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#");
+        return df.format(number);
+    }
+
 }

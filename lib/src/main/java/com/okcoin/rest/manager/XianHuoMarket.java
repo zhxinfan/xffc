@@ -78,4 +78,9 @@ public class XianHuoMarket extends MarketBase {
     public String getSecretKey() {
         return FConfig.XIANHUO_SECRET;
     }
+
+    @Override
+    public String exchangeRate() throws HttpException, IOException {
+        return null;
+    }
 }

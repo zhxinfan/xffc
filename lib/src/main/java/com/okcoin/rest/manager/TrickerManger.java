@@ -74,6 +74,28 @@ public class TrickerManger {
         return lists;
     }
 
+    public TrickerEntity getTricker(String makerType) {
+        TrickerEntity trickerEntity = null;
+        try {
+            String jsonStr = marketBase.ticker(makerType);
+
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            JSONObject tickerObj = jsonObject.getJSONObject("ticker");
+            trickerEntity = new TrickerEntity();
+            trickerEntity.setBuy(tickerObj.optDouble("buy"));
+            trickerEntity.setHigh(tickerObj.optDouble("high"));
+            trickerEntity.setSell(tickerObj.optDouble("sell"));
+            trickerEntity.setLow(tickerObj.optDouble("low"));
+            trickerEntity.setLast(tickerObj.optDouble("last"));
+            trickerEntity.setVol(tickerObj.optDouble("vol"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (HttpException e) {
+            e.printStackTrace();
+        }
+        return trickerEntity;
+    }
+
     public String[] calJunxian(String makerType, int junxianCount, double prefectxishu) throws IOException, HttpException {
 
         lastEntity = new TrickerEntity();
@@ -221,35 +243,40 @@ public class TrickerManger {
         }
     }
 
+    public void doOrder(int count, int number, String orderType, double orderValue, String makerType, double huilv) throws IOException, HttpException {
+        // 现货下单交易
+        for (int i = 0; i < count; i++) {
+
+            String tradeResult = marketBase.trade(makerType, orderType, "" + orderValue, "" + number);
+            if (tradeResult == null) {
+                break;
+            }
+            //TrickerManger.showLog(tradeResult + " \n下单价格" + orderValue * huilv);
+            TrickerManger.showLog("\n下单价格" + orderValue * huilv);
+            JSONObject tradeJSV1 = new JSONObject(tradeResult);
+            if (!tradeJSV1.getBoolean("result")) {
+                break;
+            }
+            if (orderType.equals("buy")) {
+                orderValue -= FConfig.getInstance().getOrder_offset();
+            } else {
+                orderValue += FConfig.getInstance().getOrder_offset();
+            }
+//            long tradeOrderV1 = tradeJSV1.getLong("order_id");
+//            Order order = new Order();
+//            order.setBasePrice(orderValue);
+//            order.setPerfecetValue(prefectValue);
+//            order.setType(orderType);
+//            order.setOrderId("" + tradeOrderV1);
+//            order.setNumber(number);
+//            orderMaps.put("" + tradeOrderV1, order);
+        }
+    }
+
     public void doOrder(int total, int number, String makerType, String orderType, double orderValue, double prefectValue) throws IOException, HttpException {
         int count = total / number - yingliMaps.size() - orderMaps.size();
         if (count > 0) {
-            // 现货下单交易
-            for (int i = 0; i < count; i++) {
-                if (orderType.equals("buy")) {
-                    orderValue -= FConfig.getInstance().getOrder_offset();
-                } else {
-                    orderValue += FConfig.getInstance().getOrder_offset();
-                }
-                String tradeResult = marketBase.trade(makerType, orderType, "" + orderValue, "" + number);
-                if (tradeResult == null) {
-                    break;
-                }
-                TrickerManger.showLog(tradeResult + " \n下单价格" + orderValue);
-                JSONObject tradeJSV1 = new JSONObject(tradeResult);
-                if (!tradeJSV1.getBoolean("result")) {
-                    break;
-                }
-                long tradeOrderV1 = tradeJSV1.getLong("order_id");
-                Order order = new Order();
-                order.setBasePrice(orderValue);
-                order.setPerfecetValue(prefectValue);
-                order.setType(orderType);
-                order.setOrderId("" + tradeOrderV1);
-                order.setNumber(number);
-                orderMaps.put("" + tradeOrderV1, order);
-
-            }
+            doOrder(count, number, orderType, orderValue, makerType, 1);
         }
     }
 

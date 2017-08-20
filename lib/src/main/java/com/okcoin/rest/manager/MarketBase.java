@@ -27,4 +27,6 @@ public abstract class MarketBase {
     public abstract String getAppKey();
 
     public abstract String getSecretKey();
+
+    public abstract String exchangeRate() throws HttpException, IOException;
 }

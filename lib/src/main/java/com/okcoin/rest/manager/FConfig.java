@@ -11,7 +11,7 @@ public class FConfig {
     public static final String MAKERTYPE_BTC = "btc_usd";
     public static final String MAKERTYPE_LTC = "ltc_usd";
 
-    public static final float OFFSET_BTC = 50;
+    public static final float OFFSET_BTC = 25;
     public static final float OFFSET_LTC = 2f;
 
     public static final String DUO = "buy";
@@ -39,7 +39,7 @@ public class FConfig {
     private long time = 60 * 1000 * 3;
     private boolean jiaoyi = false;
     private double prefectxishu = 1;
-    private int number = 500;
+    private int number = 25;
     private int total = number * 3;// 多空200个;
     private int junxianCount = 10;
     private boolean isAndroid = true;

@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class QiHuoMarket extends MarketBase {
     // 申请的secret_key
-    String url_prex = "https://www.okcoin.com"; // 注意：请求URL
+    String url_prex = "https://www.okex.com"; // 注意：请求URL
     // 国际站https://www.okcoin.com
     // 国内站https://www.okcoin.cn
 
@@ -79,6 +79,11 @@ public class QiHuoMarket extends MarketBase {
     @Override
     public String getSecretKey() {
         return FConfig.QIHUO_SECRET;
+    }
+
+    @Override
+    public String exchangeRate() throws HttpException, IOException {
+        return stockGet.exchange_rate();
     }
 
 
