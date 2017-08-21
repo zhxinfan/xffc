@@ -3,6 +3,7 @@ package com.example.xinfan.x;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -54,8 +55,13 @@ public class MainActivity extends Activity {
     EditText etJiange;
     @BindView(R.id.main_buy)
     RadioButton rbBuy;
+    @BindView(R.id.main_price)
+    TextView tvPrice;
     private MarketBase marketBase;
     private TrickerManger trickerManger;
+    private static final int TIME = 2 * 1000;
+
+    private Handler handler;
 
     double huilv = 0;
 
@@ -68,9 +74,34 @@ public class MainActivity extends Activity {
         marketBase = new QiHuoMarket();
         trickerManger = new TrickerManger(marketBase);
         FConfig.getInstance().setMakerType(MAKERTYPE_BTC);
+        handler = new Handler();
+        handler.post(runnable);
 
         checkHuilv();
     }
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final TrickerEntity trickerEntity = trickerManger.getTricker(FConfig.getInstance().getMakerType());
+                    if (trickerEntity != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                tvPrice.setText("" + (int) (trickerEntity.getLast() * huilv));
+                                handler.postDelayed(runnable, TIME);
+                            }
+                        });
+                    }
+//                    trickerManger.getOrders();
+                }
+            }).start();
+
+        }
+    };
 
     private void checkHuilv() {
         new Thread(new Runnable() {
@@ -80,7 +111,7 @@ public class MainActivity extends Activity {
                     String huilvStr = marketBase.exchangeRate();
                     JSONObject object = new JSONObject(huilvStr);
                     huilv = object.optDouble("rate");
-                    TrickerManger.showLog("汇率:" + huilv);
+                    //   TrickerManger.showLog("汇率:" + huilv);
                     FConfig.getInstance().setOrder_offset(100 / huilv);
 
                     final TrickerEntity trickerEntity = trickerManger.getTricker(FConfig.getInstance().getMakerType());

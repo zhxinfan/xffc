@@ -1,7 +1,7 @@
 package com.okcoin.rest.manager;
 
-import com.okcoin.rest.StockClient;
 import com.okcoin.rest.entity.Order;
+import com.okcoin.rest.entity.QiHuoEntity;
 import com.okcoin.rest.entity.TrickerEntity;
 import com.okcoin.rest.entity.event.LogEvent;
 
@@ -94,6 +94,41 @@ public class TrickerManger {
             e.printStackTrace();
         }
         return trickerEntity;
+    }
+
+    public List<QiHuoEntity> getOrders() {
+        List<QiHuoEntity> list = new ArrayList<>();
+        try {
+            String ordersStr = marketBase.orders_info("1", FConfig.getInstance().getMakerType(), "-1");
+            if (ordersStr.contains("orders")) {
+                JSONObject object = new JSONObject(ordersStr);
+                JSONArray array = object.optJSONArray("orders");
+                if (array != null && array.length() > 0) {
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonObject = array.getJSONObject(i);
+                        QiHuoEntity qiHuoEntity = new QiHuoEntity();
+                        qiHuoEntity.setAmount(jsonObject.optInt("amount"));
+                        qiHuoEntity.setContract_name(jsonObject.optString("contract_name"));
+                        qiHuoEntity.setCreate_date(jsonObject.optLong("create_date"));
+                        qiHuoEntity.setDeal_amount(jsonObject.optInt("deal_amount"));
+                        qiHuoEntity.setFee(jsonObject.optDouble("fee"));
+                        qiHuoEntity.setOrder_id(jsonObject.optInt("order_id"));
+                        qiHuoEntity.setPrice(jsonObject.optDouble("price"));
+                        qiHuoEntity.setStatus(jsonObject.optInt("status"));
+                        qiHuoEntity.setPrice_avg(jsonObject.optDouble("price_avg"));
+                        qiHuoEntity.setSymbol(jsonObject.optString("symbol"));
+                        qiHuoEntity.setType(jsonObject.optInt("type"));
+                        qiHuoEntity.setUnit_amount(jsonObject.optDouble("unit_amount"));
+                        list.add(qiHuoEntity);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (HttpException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public String[] calJunxian(String makerType, int junxianCount, double prefectxishu) throws IOException, HttpException {

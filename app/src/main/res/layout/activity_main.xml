@@ -1,51 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#c0c0c0"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/main_jiange"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:hint="价格"
-            android:inputType="number" />
-    </LinearLayout>
-
-    <RadioGroup
-        android:id="@+id/main_money_type"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/main_buy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="buy" />
-
-        <RadioButton
-            android:id="@+id/main_sell"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="sell" />
-
-    </RadioGroup>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/main_baseinfo">
 
         <TextView
             android:id="@+id/main_info"
@@ -58,7 +22,72 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_above="@+id/main_baseinfo"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/main_kong_list"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></ListView>
+
+        <ListView
+            android:id="@+id/main_duo_list"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></ListView>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/main_baseinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/main_button_layout"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/main_jiange"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:hint="价格"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/main_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/main_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="buy" />
+
+            <RadioButton
+                android:id="@+id/main_sell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sell" />
+
+        </RadioGroup>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/main_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -76,4 +105,4 @@
             android:text="唤起ok" />
 
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
