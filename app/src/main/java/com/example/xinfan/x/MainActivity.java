@@ -64,6 +64,7 @@ public class MainActivity extends Activity {
     private Handler handler;
 
     double huilv = 0;
+    int newVlaue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,17 @@ public class MainActivity extends Activity {
         checkHuilv();
     }
 
+    @OnCheckedChanged(R.id.main_buy)
+    public void onRarioBtnClick() {
+        int temp = 0;
+        if (rbBuy.isChecked()) {
+            temp = newVlaue - 500;
+        } else {
+            temp = newVlaue + 500;
+        }
+        etJiange.setText("" + temp);
+    }
+
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -91,8 +103,11 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                tvPrice.setText("" + (int) (trickerEntity.getLast() * huilv));
+                                newVlaue = (int) (trickerEntity.getLast() * huilv);
+                                TrickerManger.showLog("" + newVlaue);
+                                tvPrice.setText("" + newVlaue);
                                 handler.postDelayed(runnable, TIME);
+                                onRarioBtnClick();
                             }
                         });
                     }
@@ -119,8 +134,8 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                etJiange.setText("" + (int) (trickerEntity.getLast() * huilv));
-
+                                int value = (int) (trickerEntity.getLast() * huilv);
+                                etJiange.setText("" + value);
                             }
                         });
                     }
