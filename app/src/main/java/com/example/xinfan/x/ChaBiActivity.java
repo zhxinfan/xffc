@@ -76,12 +76,16 @@ public class ChaBiActivity extends Activity {
             while (doXunhuan) {
                 List<TrickerEntity> btcList = null;
                 List<TrickerEntity> ltcList = null;
+                double newBtcPrice = 0;
+                double newLtcPrice = 0;
                 try {
 //                    btcList = trickerManger.getTrickerEntityList("btc_usd", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
 //                    ltcList = trickerManger.getTrickerEntityList("ltc_usd", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
                     btcList = trickerManger.getTrickerEntityList("btc_cny", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
                     ltcList = trickerManger.getTrickerEntityList("ltc_cny", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
 
+                    newBtcPrice = btcList.get(btcList.size() - 1).getClose();
+                    newLtcPrice = ltcList.get(ltcList.size() - 1).getClose();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (HttpException e) {
@@ -102,11 +106,16 @@ public class ChaBiActivity extends Activity {
                         low = Math.min(low, lowNumber);
 
 
-                        TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) + "-" + StringUtils.getBigDecimal(number) + "-H " +
-                                StringUtils.getBigDecimal(highNumber) + "-L " + StringUtils.getBigDecimal(lowNumber));
+                        TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) +
+                                "-" + StringUtils.getBigDecimal(number) +
+                                "-H " + StringUtils.getBigDecimal(highNumber) +
+                                "-L " + StringUtils.getBigDecimal(lowNumber));
                     }
                 }
-                TrickerManger.showLog("----------H " + StringUtils.getBigDecimal(high) + " L " + StringUtils.getBigDecimal(low));
+                TrickerManger.showLog("----------H " + StringUtils.getBigDecimal(high) +
+                        " L " + StringUtils.getBigDecimal(low) +
+                        " BTC " + StringUtils.getBigDecimal0(newBtcPrice) +
+                        " LTC " + StringUtils.getBigDecimal0(newLtcPrice));
                 try {
                     Thread.sleep(FConfig.getInstance().getTime());
                 } catch (InterruptedException e) {
