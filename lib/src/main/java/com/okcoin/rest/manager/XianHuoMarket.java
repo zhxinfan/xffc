@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class XianHuoMarket extends MarketBase {
     // 申请的secret_key
-    String url_prex = "https://www.okcoin.com"; // 注意：请求URL
+    String url_prex = "https://www.okcoin.cn"; // 注意：请求URL
     // 国际站https://www.okcoin.com
     // ;
     // 国内站https://www.okcoin.cn

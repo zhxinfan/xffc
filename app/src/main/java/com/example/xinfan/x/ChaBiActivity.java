@@ -5,17 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.okcoin.rest.StringUtil;
 import com.okcoin.rest.entity.TrickerEntity;
 import com.okcoin.rest.entity.event.LogEvent;
 import com.okcoin.rest.manager.FConfig;
 import com.okcoin.rest.manager.MarketBase;
-import com.okcoin.rest.manager.QiHuoMarket;
 import com.okcoin.rest.manager.TrickerManger;
 import com.okcoin.rest.manager.XianHuoMarket;
 
@@ -33,11 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import utils.StringUtils;
-
-import static com.okcoin.rest.manager.FConfig.MAKERTYPE_BTC;
-import static com.okcoin.rest.manager.FConfig.MAKERTYPE_LTC;
 
 /**
  * Created by xinfan on 2017/7/20.
@@ -63,7 +56,7 @@ public class ChaBiActivity extends Activity {
         EventBus.getDefault().register(this);
         setContentView(R.layout.activity_chabi);
         ButterKnife.bind(this);
-        marketBase = new QiHuoMarket();
+        marketBase = new XianHuoMarket();
         trickerManger = new TrickerManger(marketBase);
         etJunxianCount.setText("" + FConfig.getInstance().getJunxianCount());
     }
@@ -83,29 +76,37 @@ public class ChaBiActivity extends Activity {
             while (doXunhuan) {
                 List<TrickerEntity> btcList = null;
                 List<TrickerEntity> ltcList = null;
-                double newBtcPrice = 0;
-                double newLtcPrice = 0;
                 try {
-                    btcList = trickerManger.getTrickerEntityList("btc_usd", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
-                    ltcList = trickerManger.getTrickerEntityList("ltc_usd", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
-
-                    newBtcPrice = btcList.get(btcList.size() - 1).getClose();
-                    newLtcPrice = ltcList.get(ltcList.size() - 1).getClose();
+//                    btcList = trickerManger.getTrickerEntityList("btc_usd", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
+//                    ltcList = trickerManger.getTrickerEntityList("ltc_usd", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
+                    btcList = trickerManger.getTrickerEntityList("btc_cny", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
+                    ltcList = trickerManger.getTrickerEntityList("ltc_cny", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (HttpException e) {
                     e.printStackTrace();
                 }
+                double low = 100000000;
+                double high = 0.00000000000001;
                 if (btcList != null && ltcList != null && btcList.size() == ltcList.size()) {
                     for (int i = 0; i < btcList.size(); i++) {
-                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                        String number = StringUtils.getBigDecimal(ltcList.get(i).getClose() / btcList.get(i).getClose());
-                        String targetPrice = StringUtils.getBigDecimal(Double.valueOf(number) * newBtcPrice);
-                        TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) + "-" + number + "-" + StringUtils.getBigDecimal(ltcList.get(i).getClose()) + "-" + targetPrice);
+                        DateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+                        double number = ltcList.get(i).getClose() / btcList.get(i).getClose();
+                        double highNumber = ltcList.get(i).getHigh() / btcList.get(i).getHigh();
+                        double lowNumber = ltcList.get(i).getLow() / btcList.get(i).getLow();
+                        high = Math.max(high, highNumber);
+                        high = Math.max(high, lowNumber);
+
+                        low = Math.min(low, highNumber);
+                        low = Math.min(low, lowNumber);
+
+
+                        TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) + "-" + StringUtils.getBigDecimal(number) + "-H " +
+                                StringUtils.getBigDecimal(highNumber) + "-L " + StringUtils.getBigDecimal(lowNumber));
                     }
                 }
-                TrickerManger.showLog("----------" + newLtcPrice);
+                TrickerManger.showLog("----------H " + StringUtils.getBigDecimal(high) + " L " + StringUtils.getBigDecimal(low));
                 try {
                     Thread.sleep(FConfig.getInstance().getTime());
                 } catch (InterruptedException e) {

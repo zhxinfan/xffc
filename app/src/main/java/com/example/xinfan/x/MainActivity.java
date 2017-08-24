@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -18,10 +17,7 @@ import com.okcoin.rest.manager.FConfig;
 import com.okcoin.rest.manager.MarketBase;
 import com.okcoin.rest.manager.QiHuoMarket;
 import com.okcoin.rest.manager.TrickerManger;
-import com.okcoin.rest.manager.XianHuoMarket;
 
-import org.apache.commons.codec.StringDecoder;
-import org.apache.commons.codec.language.DoubleMetaphone;
 import org.apache.http.HttpException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,10 +33,8 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
-import utils.StringUtils;
 
 import static com.okcoin.rest.manager.FConfig.MAKERTYPE_BTC;
-import static com.okcoin.rest.manager.FConfig.MAKERTYPE_LTC;
 
 /**
  * Created by xinfan on 2017/7/20.
