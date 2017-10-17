@@ -37,7 +37,11 @@ import utils.StringUtils;
  */
 
 public class ChaBiActivity extends Activity {
-    @BindViews({R.id.chabi_money_type_1, R.id.chabi_money_type_2, R.id.chabi_money_type_3, R.id.chabi_money_type_4, R.id.chabi_money_type_5, R.id.chabi_money_type_6, R.id.chabi_money_type_7})
+    @BindViews({R.id.chabi_money_type_1, R.id.chabi_money_type_2,
+            R.id.chabi_money_type_3, R.id.chabi_money_type_4,
+            R.id.chabi_money_type_5, R.id.chabi_money_type_6,
+            R.id.chabi_money_type_7, R.id.chabi_money_type_8,
+            R.id.chabi_money_type_9})
     List<RadioButton> radioButtonList;
     private OrderThread orderThread;
     @BindView(R.id.main_info)
@@ -73,55 +77,63 @@ public class ChaBiActivity extends Activity {
     public class OrderThread extends Thread {
         @Override
         public void run() {
-            while (doXunhuan) {
-                List<TrickerEntity> btcList = null;
-                List<TrickerEntity> ltcList = null;
-                double newBtcPrice = 0;
-                double newLtcPrice = 0;
-                try {
+//            while (doXunhuan) {
+            List<TrickerEntity> btcList = null;
+            List<TrickerEntity> ltcList = null;
+            double newBtcPrice = 0;
+            double newLtcPrice = 0;
+            try {
 //                    btcList = trickerManger.getTrickerEntityList("btc_usd", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
 //                    ltcList = trickerManger.getTrickerEntityList("ltc_usd", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
-                    btcList = trickerManger.getTrickerEntityList("btc_cny", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
-                    ltcList = trickerManger.getTrickerEntityList("ltc_cny", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
+                btcList = trickerManger.getTrickerEntityList("btc_cny", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
+                ltcList = trickerManger.getTrickerEntityList("ltc_cny", getLineType(), Integer.valueOf(etJunxianCount.getText().toString()));
 
-                    newBtcPrice = btcList.get(btcList.size() - 1).getClose();
-                    newLtcPrice = ltcList.get(ltcList.size() - 1).getClose();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (HttpException e) {
-                    e.printStackTrace();
-                }
-                double low = 100000000;
-                double high = 0.00000000000001;
-                if (btcList != null && ltcList != null && btcList.size() == ltcList.size()) {
-                    for (int i = 0; i < btcList.size(); i++) {
-                        DateFormat format = new SimpleDateFormat("MM-dd HH:mm");
-                        double number = ltcList.get(i).getClose() / btcList.get(i).getClose();
+                newBtcPrice = btcList.get(btcList.size() - 1).getClose();
+                newLtcPrice = ltcList.get(ltcList.size() - 1).getClose();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (HttpException e) {
+                e.printStackTrace();
+            }
+            double low = 100000000;
+            double high = 0.00000000000001;
+            if (btcList != null && ltcList != null) {
+                for (int i = 0; i < btcList.size(); i++) {
+                    DateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+                    double number = ltcList.get(i).getClose() / btcList.get(i).getClose();
                         double highNumber = ltcList.get(i).getHigh() / btcList.get(i).getHigh();
                         double lowNumber = ltcList.get(i).getLow() / btcList.get(i).getLow();
                         high = Math.max(high, highNumber);
                         high = Math.max(high, lowNumber);
+//
+//                        low = Math.min(low, highNumber);
+//                        low = Math.min(low, lowNumber);
 
-                        low = Math.min(low, highNumber);
-                        low = Math.min(low, lowNumber);
+//                        double highNumber = ltcList.get(i).getClose() / btcList.get(i).getHigh();
+//                        double lowNumber = ltcList.get(i).getLow() / btcList.get(i).getLow();
+//                        high = Math.max(high, highNumber);
+//                        high = Math.max(high, lowNumber);
+//
+//                        low = Math.min(low, highNumber);
+//                        low = Math.min(low, lowNumber);
 
 
-                        TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) +
-                                "-" + StringUtils.getBigDecimal(number) +
-                                "-H " + StringUtils.getBigDecimal(highNumber) +
-                                "-L " + StringUtils.getBigDecimal(lowNumber));
-                    }
-                }
-                TrickerManger.showLog("----------H " + StringUtils.getBigDecimal(high) +
-                        " L " + StringUtils.getBigDecimal(low) +
-                        " BTC " + StringUtils.getBigDecimal0(newBtcPrice) +
-                        " LTC " + StringUtils.getBigDecimal0(newLtcPrice));
-                try {
-                    Thread.sleep(FConfig.getInstance().getTime());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    TrickerManger.showLog(format.format(new Date(ltcList.get(i).getTime())) +
+                            "-" + StringUtils.getBigDecimal(number) +
+                            "-B " + btcList.get(i).getClose() +
+                            "-L " + ltcList.get(i).getHigh());
                 }
             }
+            TrickerManger.showLog("----------H " + StringUtils.getBigDecimal(high) +
+                    " L " + StringUtils.getBigDecimal(low) +
+                    " BTC " + StringUtils.getBigDecimal0(newBtcPrice) +
+                    " LTC " + StringUtils.getBigDecimal0(newLtcPrice));
+//                try {
+//                    Thread.sleep(FConfig.getInstance().getTime());
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }
     }
 
@@ -144,9 +156,9 @@ public class ChaBiActivity extends Activity {
             doXunhuan = true;
             if (orderThread == null) {
                 orderThread = new OrderThread();
-                orderThread.start();
             }
-            btn.setText("结束");
+            orderThread.start();
+//            btn.setText("结束");
         } else {
             stop();
 
@@ -160,6 +172,14 @@ public class ChaBiActivity extends Activity {
             startActivity(intent);
         }
     }
+
+    public void openOkex(View view) {
+        Intent intent = getPackageManager().getLaunchIntentForPackage("com.okinc.okex");
+        if (intent != null) {
+            startActivity(intent);
+        }
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessage(LogEvent event) {

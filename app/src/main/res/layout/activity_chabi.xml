@@ -29,18 +29,22 @@
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:text="1min" />
+
                 <RadioButton
                     android:id="@+id/chabi_money_type_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="false"
-                    android:text="3min" />
+                    android:text="3min"
+                    android:visibility="gone" />
+
                 <RadioButton
                     android:id="@+id/chabi_money_type_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="false"
-                    android:text="15min" />
+                    android:text="15min"
+                    android:visibility="gone" />
 
                 <RadioButton
                     android:id="@+id/chabi_money_type_2"
@@ -57,8 +61,6 @@
                     android:text="1hour" />
 
 
-
-
                 <RadioButton
                     android:id="@+id/chabi_money_type_6"
                     android:layout_width="wrap_content"
@@ -72,6 +74,20 @@
                     android:layout_height="wrap_content"
                     android:checked="false"
                     android:text="1day" />
+
+                <RadioButton
+                    android:id="@+id/chabi_money_type_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="3day" />
+
+                <RadioButton
+                    android:id="@+id/chabi_money_type_9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="1week" />
 
             </RadioGroup>
         </HorizontalScrollView>
@@ -126,5 +142,10 @@
             android:onClick="openOk"
             android:text="唤起ok" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="openOkex"
+            android:text="唤起okex" />
     </LinearLayout>
 </LinearLayout>
