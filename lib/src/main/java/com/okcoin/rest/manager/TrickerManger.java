@@ -279,6 +279,13 @@ public class TrickerManger {
     }
 
     public void doOrder(int count, int number, String orderType, double orderValue, String makerType, double huilv) throws IOException, HttpException {
+        if (orderType.equals("buy")) {
+            orderValue -= count * FConfig.getInstance().getOrder_offset();
+        } else {
+            orderValue += count * FConfig.getInstance().getOrder_offset();
+        }
+
+
         // 现货下单交易
         for (int i = 0; i < count; i++) {
 
@@ -293,9 +300,9 @@ public class TrickerManger {
                 break;
             }
             if (orderType.equals("buy")) {
-                orderValue -= FConfig.getInstance().getOrder_offset();
-            } else {
                 orderValue += FConfig.getInstance().getOrder_offset();
+            } else {
+                orderValue -= FConfig.getInstance().getOrder_offset();
             }
 //            long tradeOrderV1 = tradeJSV1.getLong("order_id");
 //            Order order = new Order();

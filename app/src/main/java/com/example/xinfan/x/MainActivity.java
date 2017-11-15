@@ -34,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 
-import static com.okcoin.rest.manager.FConfig.MAKERTYPE_BTC;
+import static com.okcoin.rest.manager.FConfig.MAKERTYPE_LTC;
 
 /**
  * Created by xinfan on 2017/7/20.
@@ -68,7 +68,9 @@ public class MainActivity extends Activity {
         ButterKnife.bind(this);
         marketBase = new QiHuoMarket();
         trickerManger = new TrickerManger(marketBase);
-        FConfig.getInstance().setMakerType(MAKERTYPE_BTC);
+        FConfig.getInstance().setMakerType(MAKERTYPE_LTC);
+        FConfig.getInstance().setNumber(1);
+
         handler = new Handler();
         handler.post(runnable);
 
@@ -77,13 +79,13 @@ public class MainActivity extends Activity {
 
     @OnCheckedChanged(R.id.main_buy)
     public void onRarioBtnClick() {
-        int temp = 0;
-        if (rbBuy.isChecked()) {
-            temp = newVlaue - 500;
-        } else {
-            temp = newVlaue + 500;
-        }
-        etJiange.setText("" + temp);
+//        int temp = 0;
+//        if (rbBuy.isChecked()) {
+//            temp = newVlaue - 50;
+//        } else {
+//            temp = newVlaue + 50;
+//        }
+//        etJiange.setText("" + newVlaue);
     }
 
     private Runnable runnable = new Runnable() {
@@ -100,8 +102,8 @@ public class MainActivity extends Activity {
                                 newVlaue = (int) (trickerEntity.getLast() * huilv);
                                 TrickerManger.showLog("" + newVlaue);
                                 tvPrice.setText("" + newVlaue);
+                                //不轮询查价格
                                 handler.postDelayed(runnable, TIME);
-                                onRarioBtnClick();
                             }
                         });
                     }
@@ -121,18 +123,8 @@ public class MainActivity extends Activity {
                     JSONObject object = new JSONObject(huilvStr);
                     huilv = object.optDouble("rate");
                     //   TrickerManger.showLog("汇率:" + huilv);
-                    FConfig.getInstance().setOrder_offset(100 / huilv);
+                    FConfig.getInstance().setOrder_offset(1 / huilv);
 
-                    final TrickerEntity trickerEntity = trickerManger.getTricker(FConfig.getInstance().getMakerType());
-                    if (trickerEntity != null) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                int value = (int) (trickerEntity.getLast() * huilv);
-                                etJiange.setText("" + value);
-                            }
-                        });
-                    }
                 } catch (HttpException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -158,11 +150,12 @@ public class MainActivity extends Activity {
                 if (TextUtils.isEmpty(etJiange.getText().toString())) {
                     return;
                 }
+                //输入的是人民币价格
                 double value = Double.valueOf(etJiange.getText().toString());
                 double newValue = value / huilv;
                 // --------------------------------开始查询老订单-----------------------------------
                 try {
-                    trickerManger.doOrder(4, FConfig.getInstance().getNumber(), rbBuy.isChecked() ?
+                    trickerManger.doOrder(100, FConfig.getInstance().getNumber(), rbBuy.isChecked() ?
                             "buy" : "sell", newValue, FConfig.getInstance().getMakerType(), huilv);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -177,7 +170,7 @@ public class MainActivity extends Activity {
     }
 
     public void openOk(View view) {
-        Intent intent = getPackageManager().getLaunchIntentForPackage("com.okcoin.trader");
+        Intent intent = getPackageManager().getLaunchIntentForPackage("com.okinc.okex");
         if (intent != null) {
             startActivity(intent);
         }

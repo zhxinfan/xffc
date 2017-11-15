@@ -23,6 +23,17 @@ public class FConfig {
     public static final String XIANHUO_APPID = "d99565c3-d264-4347-9442-e63c4fa43f73";
     public static final String XIANHUO_SECRET = "EE341A886C564B046F618FA620094D2E";
 
+
+    private String makerType = "ltc_usd";
+    private long time = 60 * 1000 * 3;
+    private boolean jiaoyi = false;
+    private double prefectxishu = 1;
+    private int number = 25;
+    private int total = number * 3;// 多空200个;
+    private int junxianCount = 10;
+    private boolean isAndroid = true;
+    private double order_offset = 0;
+
     private FConfig() {
 
     }
@@ -34,16 +45,6 @@ public class FConfig {
         return fConfig;
     }
 
-
-    private String makerType = "ltc_usd";
-    private long time = 60 * 1000 * 3;
-    private boolean jiaoyi = false;
-    private double prefectxishu = 1;
-    private int number = 25;
-    private int total = number * 3;// 多空200个;
-    private int junxianCount = 10;
-    private boolean isAndroid = true;
-    private double order_offset = 0;
 
     public String getMakerType() {
         return makerType;
